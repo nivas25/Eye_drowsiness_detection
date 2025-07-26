@@ -1,59 +1,141 @@
-# Eye Drowsiness Detection
+# Real-Time Eye Drowsiness Detection System
 
-This project implements an AI-based drowsiness detection system using computer vision and a pre-trained facial landmark detector. The system monitors eye movements in real time and triggers an alert when drowsiness is detected, ensuring safety in scenarios such as driving.
+A deep learning application that uses computer vision to monitor a driver's eyes in real-time and trigger an alert if signs of drowsiness are detected. This project was developed in the PyCharm IDE.
+
+---
 
 ## Table of Contents
 
-- [Features](#features)
-- [Installation](#installation)
-- [Usage](#usage)
-- [Code](#code)
+- [Project Overview](#project-overview)
 - [How It Works](#how-it-works)
-- [Requirements](#requirements)
-- [Contributing](#contributing)
-- [License](#license)
+- [Core Features](#core-features)
+- [Technology Stack](#technology-stack)
+- [Prerequisites](#prerequisites)
+- [Installation and Setup](#installation-and-setup)
+- [Running the Application](#running-the-application)
+- [Project Structure](#project-structure)
 
-## Features
+---
 
-- **Real-Time Eye Tracking**: Uses a webcam to track eye movements.
-- **Drowsiness Detection**: Analyzes the Eye Aspect Ratio (EAR) to detect drowsiness.
-- **Audio Alert**: Triggers an audio alert when the user's eyes are closed for a specified duration.
-- **User-Friendly Interface**: Displays real-time video feed with detected facial landmarks.
+## Project Overview
 
-## Installation
+Driver fatigue is a significant cause of traffic accidents. This project aims to provide a solution by creating an automated system that can detect driver drowsiness and prevent potential accidents. The application uses a standard webcam to capture the video feed of the driver, detects the face, focuses on the eyes, and analyzes the eye state to determine if the person is feeling sleepy.
 
-1. Clone the repository:
-   ```bash
-   git clone https://github.com/yourusername/eye_drowsiness_detection.git
-   cd eye_drowsiness_detection
+---
 
-Download the required facial landmark predictor file from here and extract the .dat file to the project directory.
+## How It Works
 
-2. Usage
-To start the drowsiness detection system, run the following command:
+The system operates through a multi-stage pipeline:
+
+1.  **Video Capture**: Accesses the webcam to get a live video stream.
+2.  **Face Detection**: In each frame, it detects the presence of a human face using a pre-trained face detector.
+3.  **Facial Landmark Detection**: Once a face is detected, it identifies key facial landmarks (for the eyes, nose, mouth, etc.). This is crucial for isolating the eye regions.
+4.  **Eye State Analysis**: The system calculates the Eye Aspect Ratio (EAR), a value that is nearly constant when an eye is open but drops to zero when it is closed.
+5.  **Drowsiness Detection**: If the EAR remains below a certain threshold for a specific number of consecutive frames, the system concludes that the person is drowsy.
+6.  **Alert System**: Upon detecting drowsiness, an alarm is triggered to alert the driver.
+
+---
+
+## Core Features
+
+-   **Real-Time Monitoring**: Processes live video feed directly from a webcam with minimal latency.
+-   **High-Accuracy Detection**: Utilizes established computer vision libraries for robust face and landmark detection.
+-   **Non-Intrusive**: Works with any standard webcam without requiring special hardware.
+-   **Audible Alarm**: Plays a sound to alert the user immediately when drowsiness is detected.
+
+---
+
+## Technology Stack
+
+-   **Programming Language**: Python
+-   **Core Libraries**:
+    -   **OpenCV**: For real-time video capture and image processing.
+    -   **Dlib**: For high-performance face detection and facial landmark prediction.
+    -   **SciPy**: For spatial calculations needed for the Eye Aspect Ratio.
+    -   **Pygame**: For playing the alarm sound.
+
+---
+
+## Prerequisites
+
+Ensure you have the following software installed on your local machine:
+
+-   [Python](https://www.python.org/downloads/) (v3.7 or higher recommended)
+-   [pip](https://pip.pypa.io/en/stable/installation/) (comes with Python)
+-   [CMake](https://cmake.org/download/) (required for Dlib installation on some systems)
+-   [Git](https://git-scm.com/downloads/)
+
+---
+
+## Installation and Setup
+
+Follow these instructions to get the project running.
+
+### 1. Clone the Repository
 
 ```bash
-python detect_drowsiness.py --shape-predictor shape_predictor_68_face_landmarks.dat
+git clone [https://github.com/nivas25/Eye_drowsiness_detection.git](https://github.com/nivas25/Eye_drowsiness_detection.git)
+cd Eye_drowsiness_detection
 ```
 
-The script will start the webcam and analyze the eye aspect ratio in real time.
-An alert will be triggered if drowsiness is detected.
+### 2. Set Up a Python Virtual Environment
 
-3. How It Works
-Eye Aspect Ratio (EAR): The system calculates the EAR using specific facial landmarks around the eyes. If the ratio falls below a threshold for a certain number of consecutive frames, it determines that the user is drowsy.
+Using a virtual environment is highly recommended to avoid conflicts with other projects.
 
-Facial Landmark Detection: The system uses the dlib library's pre-trained 68-point facial landmark predictor to detect facial landmarks.
+```bash
+# Create a virtual environment
+python -m venv venv
 
-Alert System: If the system detects drowsiness, it will display a warning on the video feed and trigger an audio alert using pyttsx3.
+# Activate the virtual environment
+# On Windows:
+venv\Scripts\activate
+# On macOS/Linux:
+source venv/bin/activate
+```
 
-4. Requirements
-Python 3.x
-OpenCV
-imutils
-dlib
-pyttsx3
-Webcam for real-time video feed
-You can install the dependencies by running:
+### 3. Install Dependencies
 
-5. License
-This project is licensed under the MIT License. See the LICENSE file for more details.
+Install all the required Python packages from the `requirements.txt` file.
+
+```bash
+pip install -r requirements.txt
+```
+*Note: Installing `dlib` can sometimes be complex. If you encounter issues, please refer to the official dlib documentation for platform-specific installation guides.*
+
+### 4. Download Pre-trained Model
+
+This project requires a pre-trained facial landmark predictor model from Dlib.
+
+-   Download the model file: `shape_predictor_68_face_landmarks.dat.bz2` from the [Dlib website](http://dlib.net/files/shape_predictor_68_face_landmarks.dat.bz2).
+-   Extract the `.dat` file from the downloaded archive.
+-   Place the `shape_predictor_68_face_landmarks.dat` file in the project's root directory or a designated `models` folder.
+
+---
+
+## Running the Application
+
+Once the setup is complete, you can run the drowsiness detection script.
+
+1.  Make sure your virtual environment is activated.
+2.  Ensure your webcam is connected and accessible.
+3.  Execute the main Python script.
+
+    ```bash
+    # Replace 'detect_drowsiness.py' with the actual name of your main script
+    python detect_drowsiness.py
+    ```
+
+4.  A window will appear showing your webcam feed with facial landmarks drawn on it. To stop the application, press the `q` key.
+
+---
+
+## Project Structure
+
+A brief overview of the key files in this project:
+
+```
+Eye_drowsiness_detection/
+├── detect_drowsiness.py              # Main script to run the application.
+├── shape_predictor_68_face_landmarks.dat # Dlib's pre-trained landmark model.
+├── alarm.wav                         # Audio file for the alarm sound.
+└── requirements.txt                  # List of Python packages required for the project.
